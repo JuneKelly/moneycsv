@@ -1,25 +1,26 @@
 extern crate yaml_rust;
 
-use yaml_rust::{YamlLoader};
+use std::{fs, path::PathBuf};
+
+use clap::Parser;
+use yaml_rust::YamlLoader;
+
+#[derive(Parser, Debug)]
+#[command(author, version, about)]
+struct Args {
+    #[arg(short, long)]
+    file: PathBuf,
+}
 
 fn main() {
-    let example_doc =
-"
-- 2023-01-01:
-  - 21.45 sweets and wine
-  - 3.67 groceries
-- 2023-01-02:
-  - 15.98 things
-  - 210.34 toys
-";
+    let args = Args::parse();
+    let file_path = args.file;
 
-    let docs = YamlLoader::load_from_str(example_doc).unwrap();
+    let source_string = fs::read_to_string(file_path).unwrap();
+
+    let docs = YamlLoader::load_from_str(&source_string).unwrap();
     let doc = &docs[0];
-
-    // println!("Doc: {:?}", doc);
-
     let doc_vec = doc.as_vec().unwrap();
-    // println!("As vector: {:?}", doc_vec);
 
     let rows = doc_vec.iter().flat_map(|h| {
         let hash = h.as_hash().unwrap();
@@ -36,5 +37,4 @@ fn main() {
     for row in rows {
         println!("{}", row.join("|"));
     }
-
 }
