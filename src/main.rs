@@ -6,7 +6,7 @@ fn main() {
     let example_doc =
 "
 - 2023-01-01:
-  - 21.45 sweets
+  - 21.45 sweets and wine
   - 3.67 groceries
 - 2023-01-02:
   - 15.98 things
@@ -25,7 +25,9 @@ fn main() {
         let hash = h.as_hash().unwrap();
         hash.iter().flat_map(|(date, spends)| {
             spends.as_vec().unwrap().iter().map(|spend| {
-                vec![date.as_str().unwrap(), spend.as_str().unwrap()]
+                let spend_str = spend.as_str().unwrap();
+                let split: Vec<&str> = spend_str.splitn(2, ' ').collect();
+                vec![date.as_str().unwrap(), split[0], split[1]]
             })
         })
     });
