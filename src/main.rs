@@ -16,10 +16,10 @@ fn main() {
     let docs = YamlLoader::load_from_str(example_doc).unwrap();
     let doc = &docs[0];
 
-    println!("Doc: {:?}", doc);
+    // println!("Doc: {:?}", doc);
 
     let doc_vec = doc.as_vec().unwrap();
-    println!("As vector: {:?}", doc_vec);
+    // println!("As vector: {:?}", doc_vec);
 
     let rows = doc_vec.iter().flat_map(|h| {
         let hash = h.as_hash().unwrap();
@@ -32,9 +32,9 @@ fn main() {
         })
     });
 
-    println!(">> Rows:");
+    println!("{}", "date|cost|description");
     for row in rows {
-        println!("{:?}", row);
+        println!("{}", row.join("|"));
     }
 
 }
