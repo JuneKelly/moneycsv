@@ -21,16 +21,18 @@ fn main() {
     let doc_vec = doc.as_vec().unwrap();
     println!("As vector: {:?}", doc_vec);
 
-    for val in doc_vec.iter() {
-        let h = val.as_hash().unwrap();
-        println!("Entry: {:?}", h);
-        for (k, v) in h.iter() {
-            println!("Date: {:?}", k);
-            for spend in v.as_vec().unwrap().iter() {
-                println!("  Spend {:?}", spend);
-            }
-        }
-    }
+    let rows = doc_vec.iter().flat_map(|h| {
+        let hash = h.as_hash().unwrap();
+        hash.iter().flat_map(|(date, spends)| {
+            spends.as_vec().unwrap().iter().map(|spend| {
+                vec![date.as_str().unwrap(), spend.as_str().unwrap()]
+            })
+        })
+    });
 
+    println!(">> Rows:");
+    for row in rows {
+        println!("{:?}", row);
+    }
 
 }
