@@ -33,8 +33,8 @@ fn main() {
         })
     });
 
-    println!("{}", "date|cost|description");
+    println!("{}", "date;cost;description");
     for row in rows {
-        println!("{}", row.join("|"));
+        println!("{}", row.join(";"));
     }
 }
