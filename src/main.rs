@@ -3,7 +3,7 @@ extern crate yaml_rust;
 use std::{fs, path::PathBuf};
 
 use clap::Parser;
-use yaml_rust::YamlLoader;
+use yaml_rust::{YamlLoader, Yaml};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
@@ -12,13 +12,21 @@ struct Args {
     file: PathBuf,
 }
 
+fn load_yaml_docs(file_path: PathBuf) -> Vec<Yaml> {
+    let source_string = fs::read_to_string(file_path).unwrap();
+    let docs = YamlLoader::load_from_str(&source_string).unwrap();
+    docs
+}
+
+fn print_row(row: Vec<&str>) {
+    println!("{}", row.join(";"));
+}
+
 fn main() {
     let args = Args::parse();
     let file_path = args.file;
 
-    let source_string = fs::read_to_string(file_path).unwrap();
-
-    let docs = YamlLoader::load_from_str(&source_string).unwrap();
+    let docs = load_yaml_docs(file_path);
     let doc = &docs[0];
     let doc_vec = doc.as_vec().unwrap();
 
@@ -33,8 +41,8 @@ fn main() {
         })
     });
 
-    println!("{}", "date;cost;description");
+    print_row(vec!["date", "cost", "description"]);
     for row in rows {
-        println!("{}", row.join(";"));
+        print_row(row);
     }
 }
