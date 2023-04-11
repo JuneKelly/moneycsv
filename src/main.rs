@@ -5,6 +5,8 @@ use std::{fs, path::PathBuf};
 use clap::Parser;
 use yaml_rust::{YamlLoader, Yaml};
 
+const SEPARATOR: &str = ";";
+
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
 struct Args {
@@ -19,7 +21,7 @@ fn load_yaml_docs(file_path: PathBuf) -> Vec<Yaml> {
 }
 
 fn print_row(row: Vec<&str>) {
-    println!("{}", row.join(";"));
+    println!("{}", row.join(SEPARATOR));
 }
 
 fn main() {
